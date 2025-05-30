@@ -1,11 +1,12 @@
+import { useAuthStore } from "@/stores/auth-store/auth.store";
 import { Redirect, Stack } from "expo-router";
 
 export default function PublicLayout() {
-  // const { isAuthenticated, role } = useAuthStore();
-  const isAuthenticated = false;
+  const { token } = useAuthStore();
+  // const isAuthenticated = false;
   const role = "admin";  
 
-  if (isAuthenticated) {
+  if (token) {
     const route = `/(auth)/(${role})/dashboard` as any;
     // return <Redirect href={`/(auth)/(admin)/dashboard`} />;
     return <Redirect href={route} />;

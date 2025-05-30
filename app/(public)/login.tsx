@@ -1,18 +1,25 @@
+import { useAuthStore } from "@/stores/auth-store/auth.store";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, Image, StyleSheet } from "react-native";
 
 export default function LoginScreen() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const { login, isLoading, error } = useAuthStore();
 
   const handleLogin = () => {
-    console.log('Login attempted with:', username, password);
-    // Add authentication logic here
+    console.log("Login attempted with:", username, password);
+    login({ username, password });
+    router.replace("/(auth)/(admin)/dashboard");
   };
 
   return (
     <View style={styles.container}>
-      <Image source={require('../../assets/images/lms3.jpg')} style={styles.logo} />
+      <Image
+        source={require("../../assets/images/lms3.jpg")}
+        style={styles.logo}
+      />
       <Text style={styles.title}>Login to LMS</Text>
       <TextInput
         style={styles.input}
