@@ -6,7 +6,7 @@ import { View, Text, TextInput, Button, Image, StyleSheet } from "react-native";
 export default function LoginScreen() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { login, isLoading, error } = useAuthStore();
+  const { login, user, isLoading, error } = useAuthStore();
 
   const handleLogin = () => {
     console.log("Login attempted with:", username, password);

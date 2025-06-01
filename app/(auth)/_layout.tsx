@@ -5,11 +5,6 @@ import { View, Text } from "react-native";
 
 export default function AuthLayout() {
   const { user, token, isLoading } = useAuthStore();
-  // const isAuthenticated = false;
-  // const isLoading = false;
-  // const role = "admin";
-
-  console.log("3333333", user, token, user.role);
 
   if (isLoading) {
     <LoadingScreen />;
