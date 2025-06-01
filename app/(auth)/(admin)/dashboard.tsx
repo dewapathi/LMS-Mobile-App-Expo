@@ -1,17 +1,22 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-// import { useAuthStore } from '@/stores/auth.store';
-// import { useAdminDashboard } from '@/features/admin/hooks/useAdminDashboard';
-// import { StatsCard } from '@/components/admin/StatsCard';
-// import { RecentActivity } from '@/components/admin/RecentActivity';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
+import { Colors } from "@/constants/Colors";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { useAuthStore } from "@/stores/auth-store/auth.store";
+import StatsCard from "@/components/common/StatsCard";
+import { Link, useRouter } from "expo-router";
+import { Feather } from "@expo/vector-icons";
 
 export default function AdminDashboard() {
-  // const { user } = useAuthStore();
-  // const { stats, recentActivities, isLoading } = useAdminDashboard();
+  const { user, isLoading } = useAuthStore();
   const colorScheme = useColorScheme();
-  const colors = Colors[colorScheme ?? 'light'];
-  const isLoading = false
+  const colors = Colors[colorScheme ?? "light"];
+  const router = useRouter();
 
   if (isLoading) {
     return (
@@ -22,49 +27,51 @@ export default function AdminDashboard() {
   }
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
-      <Text style={[styles.title, { color: colors.text }]}>
-        Welcome, {'user.name'} 👋
-      </Text>
-      
-      {/* <View style={styles.statsContainer}>
-        <StatsCard 
-          title="Total Users" 
-          value={stats.totalUsers} 
-          icon="users"
-        />
-        <StatsCard 
-          title="Active Courses" 
-          value={stats.activeCourses} 
-          icon="book"
-        />
-        <StatsCard 
-          title="New Enrollments" 
-          value={stats.newEnrollments} 
-          icon="user-plus"
-        />
+    <ScrollView
+      style={[styles.container, { backgroundColor: colors.background }]}
+    >
+      {/* Header with menu */}
+      <View style={styles.header}>
+        <Text style={[styles.title, { color: colors.text }]}>
+          Welcome, {user.username} 👋
+        </Text>
+        <TouchableOpacity onPress={() => router.push("/menu")}>
+          <Feather name="menu" size={28} color={colors.text} />
+        </TouchableOpacity>
       </View>
 
-      <RecentActivity activities={recentActivities} /> */}
+      <View style={styles.statsContainer}>
+        <StatsCard
+          title="Manage Users"
+          value="350"
+          icon="👥"
+          onPress={() => router.push("/users")}
+        />
+        <StatsCard
+          title="Manage Courses"
+          value="58"
+          icon="📚"
+          onPress={() => router.push("/courses")}
+        />
+        <StatsCard
+          title="Payments"
+          value="$5,200"
+          icon="💰"
+          onPress={() => router.push("/payments")}
+        />
+      </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+  container: { flex: 1, padding: 16 },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 20,
   },
-  statsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-    gap: 12,
-  },
+  title: { fontSize: 24, fontWeight: "bold" },
+  statsContainer: { flexDirection: "row", flexWrap: "wrap", gap: 12 },
 });
