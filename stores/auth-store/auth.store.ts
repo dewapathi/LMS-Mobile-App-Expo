@@ -14,7 +14,7 @@ type AuthState = {
 type AuthActions = {
   login: (data: any) => Promise<void>;
   //   register: (data: any) => Promise<void>;
-  //   logout: () => Promise<void>;
+  logout: () => Promise<void>;
   //   clearError: () => void;
 };
 
@@ -26,16 +26,30 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       isLoading: false,
       error: null,
 
-      login: async (data: any) => {        
+      login: async (data: any) => {
         set({ isLoading: true, error: null });
         try {
           const { user, token } = await loginService(data);
-          console.log('useruseruser', user);
-          console.log('useruseruser', token);
-          
+          console.log("7777", user, token);
+
           set({ user, token, isLoading: false });
         } catch (error: any) {
           set({ error: error.message || "Login failed", isLoading: false });
+          throw error;
+        }
+      },
+
+      logout: async () => {
+        set({ isLoading: true });
+        try {
+            console.log('5555555');
+            
+          set({ user: null, token: null, isLoading: false });
+        } catch (error: any) {
+          set({
+            error: error.message || "Logout failed",
+            isLoading: false,
+          });
           throw error;
         }
       },
