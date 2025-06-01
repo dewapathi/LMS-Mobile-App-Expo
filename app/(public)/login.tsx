@@ -1,18 +1,37 @@
-import { useAuthStore } from "@/stores/auth-store/auth.store";
+import React from "react";
 import { router } from "expo-router";
-import React, { useState } from "react";
-import { View, Text, TextInput, Button, Image, StyleSheet } from "react-native";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
+import { FormInput } from "@/components/ui/FormInput";
+
+import { useAuthStore } from "@/stores/auth-store/auth.store";
+import { LoginDataFormValues, loginSchema } from "../schemas/auth.schema";
 
 export default function LoginScreen() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const { login, user, isLoading, error } = useAuthStore();
+  const { login, isLoading, error } = useAuthStore();
 
-  const handleLogin = () => {
-    console.log("Login attempted with:", username, password);
-    login({ username, password });
+  const handleLogin = (values: LoginDataFormValues) => {
+    login(values);
     router.replace("/(auth)/(admin)/dashboard");
   };
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginDataFormValues>({
+    resolver: zodResolver(loginSchema),
+  });
 
   return (
     <View style={styles.container}>
@@ -21,20 +40,30 @@ export default function LoginScreen() {
         style={styles.logo}
       />
       <Text style={styles.title}>Login to LMS</Text>
-      <TextInput
-        style={styles.input}
+      <FormInput
+        control={control}
+        name="username"
         placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
+        error={errors.username ? errors.username?.message : error}
       />
-      <TextInput
-        style={styles.input}
+      <FormInput
+        control={control}
+        name="password"
         placeholder="Password"
         secureTextEntry
-        value={password}
-        onChangeText={setPassword}
+        error={errors.password ? errors.password?.message : error}
       />
-      <Button title="Login" onPress={handleLogin} />
+
+      <TouchableOpacity
+        style={styles.loginButton}
+        onPress={handleSubmit(handleLogin)}
+      >
+        {isLoading ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <Text style={styles.loginButtonText}>Login</Text>
+        )}
+      </TouchableOpacity>
     </View>
   );
 }
@@ -57,12 +86,18 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginBottom: 20,
   },
-  input: {
-    width: "100%",
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    marginBottom: 15,
+  loginButton: {
+    marginTop: 20,
+    backgroundColor: "#007AFF",
+    paddingVertical: 12,
+    paddingHorizontal: 24,
     borderRadius: 5,
+    width: "100%",
+    alignItems: "center",
+  },
+  loginButtonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });

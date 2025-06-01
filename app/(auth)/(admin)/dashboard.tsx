@@ -72,6 +72,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 20,
   },
-  title: { fontSize: 24, fontWeight: "bold" },
+  title: { fontSize: 20, fontWeight: "bold" },
   statsContainer: { flexDirection: "row", flexWrap: "wrap", gap: 12 },
 });

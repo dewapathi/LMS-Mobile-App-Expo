@@ -8,9 +8,7 @@ export default function PublicLayout() {
   // const isAuthenticated = false;
   const role = "admin";  
 
-  if (token) {
-    console.log('8888888888888888');
-    
+  if (token) {    
     const route = `/(auth)/(${role})/dashboard` as any;
     // return <Redirect href={`/(auth)/(admin)/dashboard`} />;
     return <Redirect href={route} />;

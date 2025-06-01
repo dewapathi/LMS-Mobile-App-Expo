@@ -3,6 +3,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LoginDataFormValues } from "@/app/schemas/auth.schema";
 
 type AuthState = {
   user: any | null;
@@ -12,7 +13,7 @@ type AuthState = {
 };
 
 type AuthActions = {
-  login: (data: any) => Promise<void>;
+  login: (data: LoginDataFormValues) => Promise<void>;
   //   register: (data: any) => Promise<void>;
   logout: () => Promise<void>;
   //   clearError: () => void;
@@ -34,7 +35,18 @@ export const useAuthStore = create<AuthState & AuthActions>()(
 
           set({ user, token, isLoading: false });
         } catch (error: any) {
-          set({ error: error.message || "Login failed", isLoading: false });
+          let errorMessage = "Login failed";
+
+          if (error.response?.data?.error?.details?.non_field_errors?.[0]) {
+            errorMessage =
+              error.response.data.error.details.non_field_errors[0];
+          } else if (error.response?.data?.error?.message) {
+            errorMessage = error.response.data.error.message;
+          } else if (error.message) {
+            errorMessage = error.message;
+          }
+
+          set({ error: errorMessage, isLoading: false });
           throw error;
         }
       },
@@ -42,8 +54,8 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       logout: async () => {
         set({ isLoading: true });
         try {
-            console.log('5555555');
-            
+          console.log("5555555");
+
           set({ user: null, token: null, isLoading: false });
         } catch (error: any) {
           set({
