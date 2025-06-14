@@ -15,7 +15,7 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { useAuthStore } from "@/stores/auth-store/auth.store";
 import StatsCard from "@/components/common/StatsCard";
 
-export default function AdminDashboard() {
+export default function TeacherDashboard() {
   const { user, isLoading } = useAuthStore();
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];

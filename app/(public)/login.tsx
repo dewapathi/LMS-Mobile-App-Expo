@@ -1,5 +1,5 @@
 import React from "react";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,7 +17,7 @@ import { FormInput } from "@/components/ui/FormInput";
 import { useAuthStore } from "@/stores/auth-store/auth.store";
 import { LoginDataFormValues, loginSchema } from "../schemas/auth.schema";
 
-export default function LoginScreen() {
+export default function LoginScreen() {  
   const { login, isLoading, error } = useAuthStore();
 
   const handleLogin = (values: LoginDataFormValues) => {
@@ -64,6 +64,10 @@ export default function LoginScreen() {
           <Text style={styles.loginButtonText}>Login</Text>
         )}
       </TouchableOpacity>
+
+      <Link href="/(public)/register" style={[styles.link]}>
+        Don't have an account? <Text style={styles.registerText}>Register</Text>
+      </Link>
     </View>
   );
 }
@@ -98,6 +102,15 @@ const styles = StyleSheet.create({
   loginButtonText: {
     color: "#fff",
     fontSize: 18,
+    fontWeight: "bold",
+  },
+  link: {
+    marginTop: 15,
+    textAlign: "center",
+    fontSize: 16,
+  },
+  registerText: {
+    color: "#007AFF",
     fontWeight: "bold",
   },
 });
