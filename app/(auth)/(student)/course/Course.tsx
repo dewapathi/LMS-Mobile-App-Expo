@@ -12,10 +12,9 @@ import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
 import { useAuthStore } from "@/stores/auth-store/auth.store";
-import StatsCard from "@/components/common/StatsCard";
 import { Colors } from "@/constants/Colors";
 
-export default function StudentDashboard() {
+export default function Course() {
   const { user, isLoading } = useAuthStore();
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
@@ -40,27 +39,11 @@ export default function StudentDashboard() {
         {/* Header */}
         <View style={styles.header}>
           <Text style={[styles.title, { color: colors.text }]}>
-            Welcome, {user?.username ?? ""} 👋
+            Courses
           </Text>
           <TouchableOpacity onPress={() => router.push("/menu")}>
             <Feather name="menu" size={28} color={colors.text} />
           </TouchableOpacity>
-        </View>
-
-        {/* Dashboard Cards */}
-        <View style={styles.statsWrapper}>
-          <StatsCard
-            title="Manage Courses"
-            value="58"
-            icon="📚"
-            onPress={() => router.push("/(auth)/(student)/course/Course")}
-          />
-          <StatsCard
-            title="Get course"
-            value="$5,200"
-            icon="💰"
-            onPress={() => router.push("/(auth)/(student)/payment/Payment")}
-          />
         </View>
       </ScrollView>
     </SafeAreaView>
