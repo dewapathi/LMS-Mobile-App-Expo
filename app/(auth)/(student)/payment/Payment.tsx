@@ -1,76 +1,44 @@
 import {
   View,
   Text,
-  StyleSheet,
-  SafeAreaView,
   ScrollView,
   TouchableOpacity,
-  useColorScheme,
+  StyleSheet,
+  Alert,
 } from "react-native";
-
-import { Feather } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-
 import { useAuthStore } from "@/stores/auth-store/auth.store";
-import { Colors } from "@/constants/Colors";
+import { useStripePayment } from "@/hooks/useStripePayment";
 
-export default function Payment() {
-  const { user, isLoading } = useAuthStore();
-  const colorScheme = useColorScheme();
-  const colors = Colors[colorScheme ?? "light"];
-  const router = useRouter();
-
-  if (isLoading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Text style={{ color: colors.text }}>Loading dashboard...</Text>
-      </View>
-    );
-  }
+export default function PaymentScreen() {
+  const { user } = useAuthStore();
+  const { handlePay, loading, error } = useStripePayment(user);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <ScrollView
-        contentContainerStyle={[
-          styles.contentContainer,
-          { backgroundColor: colors.background },
-        ]}
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>Payment</Text>
+      <TouchableOpacity
+        style={styles.payButton}
+        disabled={loading}
+        onPress={handlePay}
       >
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={[styles.title, { color: colors.text }]}>Payment</Text>
-          <TouchableOpacity onPress={() => router.push("/menu")}>
-            <Feather name="menu" size={28} color={colors.text} />
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+        <Text style={styles.payButtonText}>
+          {loading ? "Processing..." : "Pay Now"}
+        </Text>
+      </TouchableOpacity>
+      {error && <Text style={styles.error}>{error}</Text>}
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  contentContainer: {
+  container: { padding: 20, flexGrow: 1, justifyContent: "center" },
+  title: { fontSize: 24, fontWeight: "bold", marginBottom: 20 },
+  payButton: {
+    backgroundColor: "#007AFF",
     padding: 16,
-    minHeight: "100%",
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    borderRadius: 8,
     alignItems: "center",
-    marginBottom: 20,
   },
-  title: {
-    fontSize: 22,
-    fontWeight: "700",
-  },
-  statsWrapper: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-  },
+  payButtonText: { color: "#fff", fontSize: 18, fontWeight: "600" },
+  error: { color: "red", marginTop: 10 },
 });

@@ -21,3 +21,5 @@ npm install zustand
 npm install react-hook-form zod @hookform/resolvers
 npx expo install @react-native-async-storage/async-storage
 npm install immer
+npx expo install @stripe/stripe-react-native
+
